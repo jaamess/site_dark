@@ -54,7 +54,7 @@
             width: 80%;
         }
 
-        .login-card input[type="usuario"],
+        .login-card input[type="text"],
         .login-card input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -93,7 +93,7 @@
     <div class="login-card">
         <h1>Painel</h1>
         <form action="/admin" method="POST">
-            <input type="usuario" id="usuario" name="usuario" placeholder="Usuario" required>
+            <input type="text" id="usuario" name="usuario" placeholder="Usuario" required>
             <input type="password" id="password" name="password" placeholder="Senha" required>
             <button type="submit">Entrar</button>
             <% if (error) { %>

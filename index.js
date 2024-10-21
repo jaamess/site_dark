@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { Client, GatewayIntentBits } = require("discord.js");
 const app = express();
-const port = 3000;
+const port = 80;
 let config = require('./config.js');
 const auditLog = [];
 
@@ -62,15 +62,19 @@ app.get('/admin', (req, res) => {
 
 app.post('/admin', (req, res) => {
   const { usuario, password } = req.body;
+  console.log(`Received usuario: ${usuario}, password: ${password}`);
+
   const user = config.users[usuario];
 
   if (!user) {
     console.error(`User not found: ${usuario}`);
   } else if (user.password !== password) {
     console.error(`Invalid password for user: ${usuario}`);
+    console.log(`Stored password: ${user.password}, Entered password: ${password}`);
   }
 
   if (user && user.password === password) {
+    console.log(`Login successful for user: ${usuario}`);
     req.session.authenticated = true;
     req.session.role = user.role;
     req.session.usuario = usuario;
@@ -81,7 +85,8 @@ app.post('/admin', (req, res) => {
 
     res.redirect('/admin/settings');
   } else {
-    res.render('login', { error: 'Invalid usuario or password' });
+    console.log('Login failed due to incorrect credentials.');
+    res.render('login', { error: 'Verifique se a senha e/ou usuário digitado está correto.' });
   }
 });
 
