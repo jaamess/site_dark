@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { Client, GatewayIntentBits } = require("discord.js");
 const app = express();
-const port = 80;
+const port = 3000;
 let config = require('./config.js');
 const auditLog = [];
 
