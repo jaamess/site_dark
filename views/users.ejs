@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - Usuários</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: black;
+            color: white;
+        }
+
+        .container {
+            background-color: rgba(107, 107, 107, 0.151);
+            border: 2px solid #ffffff5d;
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn {
+            background-color: rgba(107, 107, 107, 0.151);
+            color: #dcdcdcf3;
+            border: 2px solid #ffffff5d;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #5653535c;
+            color: #d3d3d3ad;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .user-table th,
+        .user-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .user-table th {
+            background-color: #444;
+            color: white;
+        }
+
+        .user-table td {
+            background-color: rgba(107, 107, 107, 0.151);
+            color: white;
+        }
+
+        .inline-form {
+            display: inline;
+        }
+
+        .settings-form input[type="usuario"],
+        .settings-form input[type="password"],
+        .settings-form select {
+            width: 80%;  /* 20% shorter */
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-brand">
+            <h1>Painel de Usuários</h1>
+        </div>
+        <nav class="navbar-menu">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin/settings">Settings</a></li>
+                <li><a href="/admin/users">Users</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container">
+        <h2>User Management</h2>
+        <form id="addUserForm" action="/admin/users/add" method="POST" class="settings-form">
+            <h3>Add User</h3>
+            <label for="add_usuario">Usuario:</label>
+            <input type="usuario" id="add_usuario" name="usuario" required>
+            <br>
+            <label for="add_password">Password:</label>
+            <input type="password" id="add_password" name="password" required>
+            <br>
+            <label for="add_role">Role:</label>
+            <select id="add_role" name="role" required>
+                <option value="admin">Admin</option>
+                <option value="editor">Editor</option>
+                <option value="viewer">Viewer</option>
+            </select>
+            <br>
+            <button type="submit" class="btn">Add User</button>
+        </form>
+
+        <h3 style="padding-top: 20px;">Existing Users</h3>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>usuario</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% Object.keys(users).forEach(function(usuario) { %>
+                    <tr>
+                        <td><%= usuario %></td>
+                        <td><%= users[usuario].role %></td>
+                        <td>
+                            <form action="/admin/users/edit" method="POST" class="inline-form">
+                                <input type="hidden" name="usuario" value="<%= usuario %>">
+                                <input type="password" name="password" placeholder="New Password">
+                                <select name="role">
+                                    <option value="admin" <%= users[usuario].role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                    <option value="editor" <%= users[usuario].role === 'editor' ? 'selected' : '' %>>Editor</option>
+                                    <option value="viewer" <%= users[usuario].role === 'viewer' ? 'selected' : '' %>>Viewer</option>
+                                </select>
+                                <button type="submit" class="btn">Edit</button>
+                            </form>
+                            <form action="/admin/users/delete" method="POST" class="inline-form">
+                                <input type="hidden" name="usuario" value="<%= usuario %>">
+                                <button type="submit" class="btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

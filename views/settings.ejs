@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - Configurações</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-brand">
+            <h1>Painel</h1>
+        </div>
+        <nav class="navbar-menu">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin/settings">Settings</a></li>
+                <li><a href="/admin/users">Users</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container">
+        <h2>Settings</h2>
+        <form id="settingsForm" action="/admin/settings" method="POST" class="settings-form">
+            <section>
+                <h3>Servidor</h3>
+                <label for="server_ativado">Ativado:</label>
+                <label class="switch">
+                    <input type="checkbox" id="server_ativado" name="config[server][ativado]" <%= config.server.ativado ? 'checked' : '' %> <%= permissions.canEditServer ? '' : 'disabled' %>>
+                    <span class="slider round"></span>
+                </label>
+                <br>
+                <label for="server_id">ID do Servidor</label>
+                <input type="text" id="server_id" name="config[server][id]" value="<%= config.server.id %>" class="short-input" <%= permissions.canEditServer ? '' : 'disabled' %>>
+                <br>
+                <label for="server_convite">Convite</label>
+                <input type="text" id="server_convite" name="config[server][convite]" value="<%= config.server.convite %>" class="short-input" <%= permissions.canEditServer ? '' : 'disabled' %>>
+            </section>
+            <section>
+                <h3>Página</h3>
+                <label for="pagina_particulas">Partículas</label>
+                <input type="text" id="pagina_particulas" name="config[pagina][particulas]" value="<%= config.pagina.particulas %>" class="short-input" <%= permissions.canEditPage ? '' : 'disabled' %>>
+                <br>
+                <label for="pagina_avatar_redondo">Avatar Redondo</label>
+                <label class="switch">
+                    <input type="checkbox" id="pagina_avatar_redondo" name="config[pagina][avatar_redondo]" <%= config.pagina.avatar_redondo ? 'checked' : '' %> <%= permissions.canEditPage ? '' : 'disabled' %>>
+                    <span class="slider round"></span>
+                </label>
+                <br>
+                <label for="pagina_background">Background</label>
+                <input type="text" id="pagina_background" name="config[pagina][background]" value="<%= config.pagina.background %>" class="short-input" <%= permissions.canEditPage ? '' : 'disabled' %>>
+                <br>
+                <label for="pagina_cor_fundo">Cor de Fundo</label>
+                <input type="color" id="pagina_cor_fundo" name="config[pagina][cor_fundo]" value="<%= config.pagina.cor_fundo %>" class="short-input" <%= permissions.canEditPage ? '' : 'disabled' %>>
+                <br>
+                <label for="pagina_titulo_pagina">Título da Página</label>
+                <input type="text" id="pagina_titulo_pagina" name="config[pagina][titulo_pagina]" value="<%= config.pagina.titulo_pagina %>" class="short-input" <%= permissions.canEditPage ? '' : 'disabled' %>>
+            </section>
+            <% if (permissions.canEditBot) { %>
+            <section>
+                <h3>Bot Settings</h3>
+                <label for="bot_token">Token</label>
+                <input type="text" id="bot_token" name="config[bot][token]" value="<%= config.bot.token %>" class="short-input">
+            </section>
+            <% } %>
+            <% if (permissions.canUploadMusic || permissions.canEditPage) { %>
+            <section>
+                <h3>Música</h3>
+                <label for="music_upload">Adicionar Música (MP3):</label>
+                <input type="file" id="music_upload" name="music_upload" accept=".mp3" <%= permissions.canUploadMusic ? '' : 'disabled' %>>
+            </section>
+            <% } %>
+            <button type="submit" class="btn" <%= permissions.canEditServer || permissions.canEditPage || permissions.canEditBot || permissions.canUploadMusic ? '' : 'disabled' %>>Save Settings</button>
+        </form>
+        <div id="feedback" class="feedback"></div>
+    </main>
+    <script src="/js/validation.js"></script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+  <title>Voids</title>
+  <meta content="#2b2d31" name="theme-color">
+  <meta content="👻" property="og:description">
+
+  <link
+    href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <link href="<%= site_config.particulas %>" rel="icon" />
+
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet"
+  />
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/css/glightbox.min.css"
+  />
+  <link href="style.css" rel="stylesheet" />
+
+  <style>
+    .icon-label-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .icon-label {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .icon-label .fab, .icon-label .fas {
+      margin-right: 5px;
+      color: grey;
+      font-size: 24px;
+      transition: transform 0.3s;
+    }
+
+    .icon-label:hover .fab, .icon-label:hover .fas {
+      transform: scale(1.2);
+    }
+
+    .label-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #999999;
+      visibility: hidden;
+      background-color: black;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; 
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .icon-label:hover .label-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body style="background-color: <%= site_config.cor_fundo %>">
+  <div id="clickMessage" class="centered-div">
+    <div id="revealButton" onclick="revealSite()" class="inc">Click >.<</div>
+  </div>
+  <div id="conteudo_site" style="display: none">
+    <section id="team" class="team section-bg">
+      <% if(server !==null) { %>
+      <div
+        data-aos="fade-in"
+        class="centered-div"
+        style="margin-top: -240px; margin-bottom: -150px"
+      >
+        <img
+          style="border-radius: 50%; margin-top: 30px"
+          src="<%= server.iconURL({dynamic: true, extension: 'png'}) %>"
+          alt="Imagem"
+          class="img"
+        />
+        <div class="section-title">
+          <h2 style="margin-bottom: -10px" data-aos="fade-in">
+            <%= server.name %>
+          </h2>
+        </div>
+        <button
+          class="button"
+          onclick="window.open('<%= sv.convite %>')"
+          style="height: 50px"
+        >
+          Entrar
+        </button>
+      </div>
+      <% } else { %>
+      <div class="section-title">
+        <button
+          class="button"
+          onclick="window.open('https://discord.gg/baw')"
+          style="height: 50px"
+        >
+          Clique aqui para começar um gf!
+        </button>
+        <h2 data-aos="fade-in"><%= site_config.titulo_pagina %></h2>
+      </div>
+      <% } %>
+
+      <div class="row justify-content-md-center" style="margin-top: 10px">
+        <% Object.values(users).forEach((a) => { %>
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <div
+            class="card"
+            data-tilt
+            data-tilt-glare
+            data-tilt-max-glare="1.0"
+          >
+            <div class="card-body">
+              <div class="pic">
+                <img
+                  class="card-img-top"
+                  src="<%= a.info_user.avatar %>"
+                  alt="User Avatar"
+                />
+              </div>
+              <h4 class="card-title">@<%= a.info_user.username %></h4>
+              <ul class="badge-list">
+                <% a.badges.forEach((badge) => { %>
+                <li>
+                  <img class="badge-image" src="<%= badge %>" alt="Badge" />
+                </li>
+                <% }); %>
+              </ul>
+              <div class="icon-label-container">
+                <% a.iconLabels && a.iconLabels.forEach((iconLabel) => { %>
+                <div class="icon-label">
+                  <i class="<%= iconLabel.icon %>"></i>
+                  <span class="label-text"><%= iconLabel.label %></span>
+                </div>
+                <% }); %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+  </div>
+  <script>
+    function revealSite() {
+      var clickMessage = document.getElementById("clickMessage");
+      var conteudo_site = document.getElementById("conteudo_site");
+      var audio = new Audio("/music/music.mp3");
+      audio.volume = 0.01;
+
+      clickMessage.style.display = "none";
+
+      conteudo_site.classList.add("fade-in");
+
+      setTimeout(function () {
+        conteudo_site.style.display = "block";
+      }, 100);
+
+      audio.addEventListener("ended", function () {
+        audio.currentTime = 0;
+        audio.play();
+      });
+
+      audio.play();
+    }
+  </script>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.4.1/swiper-bundle.min.js"
+    integrity="sha512-3Ei7OPFo83kw3cPbDLeLhn/YF8tZB7Vs8sfli0B/KEekureL5eosDeshYFICCvt4K8i0yUil/lK3cSiic2Wjkg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/js/glightbox.min.js"
+    integrity="sha512-S/H9RQ6govCzeA7F9D0m8NGfsGf0/HjJEiLEfWGaMCjFzavo+DkRbYtZLSO+X6cZsIKQ6JvV/7Y9YMaYnSGnAA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
+
+  <script src="js/main.js"></script>
+  <script src="js/vanilla-tilt.js"></script>
+</body>
+</html>
